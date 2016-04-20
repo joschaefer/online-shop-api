@@ -32,6 +32,13 @@ module.exports = {
       type: 'boolean',
       required: true,
       defaultsTo: false
+    },
+
+    // Override toJSON instance method to remove password from output
+    toJSON: function() {
+      var obj = this.toObject();
+      delete obj.password;
+      return obj;
     }
 
   }
