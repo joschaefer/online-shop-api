@@ -1,9 +1,15 @@
 {
-  "name": "shop",
+  "name": "online-shop-api",
   "private": true,
   "version": "0.0.0",
-  "description": "a Sails application",
+  "description": "Store a list of products. Products can be categorized and access is granted to users on a login-base. Provides a RESTful API.",
+  "license": "GPL-3.0",
   "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joschaefer/online-shop-api"
+  },
+  "author": "Johannes Schäfer <mail@johannes-schaefer.net>",
   "dependencies": {
     "ejs": "2.3.4",
     "grunt": "0.4.5",
@@ -27,11 +33,5 @@
     "debug": "node debug app.js",
     "start": "node app.js"
   },
-  "main": "app.js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/joe/shop.git"
-  },
-  "author": "joe",
-  "license": ""
+  "main": "app.js"
 }
