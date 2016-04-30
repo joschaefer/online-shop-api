@@ -7,7 +7,6 @@
 
 var jwt = require('jsonwebtoken');
 
-// Generates a token from supplied payload
 module.exports = {
 
   issue: function (payload) {
