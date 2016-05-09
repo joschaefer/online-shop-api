@@ -11,23 +11,30 @@ module.exports = {
 
     width: {
       type: 'integer',
-      required: true,
       min: 0
     },
 
     height: {
       type: 'integer',
-      required: true,
       min: 0
     },
 
-    original: {
+    thumb: {
       type: 'string',
-      required: true,
       url: true
     },
 
-    thumb: {
+    medium: {
+      type: 'string',
+      url: true
+    },
+
+    large: {
+      type: 'string',
+      url: true
+    },
+
+    original: {
       type: 'string',
       required: true,
       url: true
