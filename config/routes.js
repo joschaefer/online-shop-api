@@ -32,4 +32,6 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
+  'post /login': 'AuthController.login'
+
 };

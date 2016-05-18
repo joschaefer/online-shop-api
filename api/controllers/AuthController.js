@@ -1,47 +1,54 @@
 /**
  * AuthController
  *
- * @description :: Server-side logic for managing auths
+ * @description :: Server-side logic for managing user authorizations
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
- * @todo        :: Error messages from list
  */
+
+var passport = require('passport');
+
+/**
+ * Triggers when user authenticates via passport
+ * @param {Object} req Request object
+ * @param {Object} res Response object
+ * @param {Object} error Error object
+ * @param {Object} user User profile
+ * @param {Object} info Info if some error occurs
+ * @private
+ */
+function _onPassportAuth(req, res, error, user, info) {
+
+  if (error) {
+    return res.serverError(error);
+  }
+
+  if (!user) {
+    sails.log.debug('Authentication error (' + req.method + ' ' + req.path + '): ' + info.message);
+    return res.unauthorized({
+      status: 401,
+      code: 'E_WRONG_CREDENTIALS',
+      message: 'Missing or wrong credentials.'
+    });
+  }
+
+  sails.log.debug('Authentication successful for user `' + user.email + '`.');
+
+  return res.ok({
+    token: CipherService.createToken(user),
+    user: user
+  });
+
+}
 
 module.exports = {
 
-  index: function (req, res) {
-
-    var email = req.param('email');
-    var password = req.param('password');
-
-    if (!email || !password) {
-      return res.json(401, {err: 'Email and password required'});
-    }
-
-    User.findOne({email: email}, function (err, user) {
-
-      if (!user) {
-        return res.json(401, {err: 'Invalid email or password'});
-      }
-
-      User.comparePassword(password, user, function (err, valid) {
-
-        if (err) {
-          return res.json(403, {err: 'forbidden'});
-        }
-
-        if (!valid) {
-          return res.json(401, {err: 'Invalid email or password'});
-        } else {
-          res.json({
-            user: user,
-            token: jwToken.issue({id: user.id})
-          });
-        }
-
-      });
-
-    })
-
+  /**
+   * Log in by local strategy in passport
+   * @param {Object} req Request object
+   * @param {Object} res Response object
+   */
+  login: function (req, res) {
+    passport.authenticate('local', _onPassportAuth.bind(this, req, res))(req, res);
   }
 
 };

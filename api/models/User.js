@@ -1,5 +1,5 @@
 /**
- * User.js
+ * User
  *
  * @description :: This represents a user of the online shop. A user can be a customer viewing products, an employee managing products or an administrator setting things up.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
@@ -9,8 +9,9 @@ var bcrypt = require('bcrypt');
 
 module.exports = {
 
-  // Force schema independently of app settings
   schema: true,
+  autoCreatedAt: true,
+  autoUpdatedAt: true,
 
   attributes: {
 
@@ -21,7 +22,8 @@ module.exports = {
     },
 
     password: {
-      type: 'string'
+      type: 'string',
+      required: true
     },
 
     status: {
@@ -37,7 +39,7 @@ module.exports = {
       defaultsTo: false
     },
 
-    // Override toJSON instance method to remove password from output
+    // Never output the (hashed) password
     toJSON: function () {
       var obj = this.toObject();
       delete obj.password;
@@ -46,44 +48,28 @@ module.exports = {
 
   },
 
-  beforeCreate: function (values, next) {
+  beforeUpdate: function (values, next) {
 
-    bcrypt.genSalt(sails.config.jwt.bcryptRounds, function (err, salt) {
+    // Prevent user from overriding these attributes
+    delete values.status;
+    delete values.createdAt;
+    delete values.updatedAt;
 
-      if (err) {
-        return next(err);
-      }
+    CipherService.hashPassword(values);
 
-      bcrypt.hash(values.password, salt, function (err, hash) {
-
-        if (err) {
-          return next(err);
-        }
-
-        values.password = hash;
-        next();
-
-      });
-
-    });
+    next();
 
   },
 
-  comparePassword: function (password, user, cb) {
+  beforeCreate: function (values, next) {
 
-    bcrypt.compare(password, user.password, function (err, match) {
+    // Prevent user from predefining these attributes
+    delete values.createdAt;
+    delete values.updatedAt;
 
-      if (err) {
-        cb(err);
-      }
+    CipherService.hashPassword(values);
 
-      if (match) {
-        cb(null, true);
-      } else {
-        cb(err);
-      }
-
-    });
+    next();
 
   }
 
