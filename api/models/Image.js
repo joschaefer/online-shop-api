@@ -38,6 +38,20 @@ module.exports = {
       type: 'string',
       required: true,
       url: true
+    },
+
+    toJSON: function() {
+
+      var obj = this.toObject()
+        , baseUrl = sails.config.app.baseUrl;
+
+      obj.thumb    = baseUrl + obj.thumb;
+      obj.medium   = baseUrl + obj.medium;
+      obj.large    = baseUrl + obj.large;
+      obj.original = baseUrl + obj.original;
+
+      return obj;
+
     }
 
   }

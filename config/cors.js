@@ -47,7 +47,8 @@ module.exports.cors = {
   *                                                                          *
   ***************************************************************************/
 
-  origin: process.env.corsOrigin || '*',
+  // @todo: Use baseUrl
+  origin: '*',
 
   /***************************************************************************
   *                                                                          *
@@ -73,6 +74,6 @@ module.exports.cors = {
   *                                                                          *
   ***************************************************************************/
 
-  headers: 'content-type, authorization'
+  headers: 'Content-Type, Authorization'
 
 };

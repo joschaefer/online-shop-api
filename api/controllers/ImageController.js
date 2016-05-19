@@ -124,7 +124,7 @@ module.exports = {
 
 function buildFileAddress(file, insertion) {
 
-  var address = sails.getBaseurl() + '/uploads/' + file.name;
+  var address = '/uploads/' + file.name;
 
   if (insertion) {
     address += '-' + insertion;
