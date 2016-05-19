@@ -6,6 +6,7 @@
  */
 
 var gm = require('gm');
+var im = gm.subClass({ imageMagick: true });
 var uuid = require('uuid');
 
 module.exports = {
@@ -66,7 +67,7 @@ module.exports = {
         if (err) return res.serverError(err);
 
         // Generate thumbnail
-        gm(filenameOriginal).resize(600, 450, '^').gravity('center').crop(600, 450).write(filenameThumb, function (err) {
+        im(filenameOriginal).resize(600, 450, '^').gravity('center').crop(600, 450).write(filenameThumb, function (err) {
 
           if (err) return res.serverError(err);
 
@@ -79,11 +80,11 @@ module.exports = {
         });
 
         // Generate medium version
-        gm(filenameOriginal).resize(800, 600).write(filenameMedium, function (err) {
+        im(filenameOriginal).resize(800, 600).write(filenameMedium, function (err) {
 
           if (err) return res.serverError(err);
 
-          gm(filenameMedium).size(function (err, size) {
+          im(filenameMedium).size(function (err, size) {
 
             if (err) return res.serverError(err);
 
@@ -100,7 +101,7 @@ module.exports = {
         });
 
         // Generate large version
-        gm(filenameOriginal).resize(1600, 1200).write(filenameLarge, function (err) {
+        im(filenameOriginal).resize(1600, 1200).write(filenameLarge, function (err) {
 
           if (err) return res.serverError(err);
 
