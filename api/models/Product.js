@@ -45,6 +45,10 @@ module.exports = {
     delete values.createdAt;
     delete values.updatedAt;
 
+    if (values.category.id) {
+      values.category = values.category.id;
+    }
+
     next();
 
   }
