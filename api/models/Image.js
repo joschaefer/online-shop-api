@@ -20,24 +20,20 @@ module.exports = {
     },
 
     thumb: {
-      type: 'string',
-      url: true
+      type: 'string'
     },
 
     medium: {
-      type: 'string',
-      url: true
+      type: 'string'
     },
 
     large: {
-      type: 'string',
-      url: true
+      type: 'string'
     },
 
     original: {
       type: 'string',
-      required: true,
-      url: true
+      required: true
     },
 
     toJSON: function() {
