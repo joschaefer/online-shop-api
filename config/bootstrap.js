@@ -28,7 +28,8 @@ module.exports.bootstrap = function(cb) {
     User.create({
       email:    email,
       password: password,
-      status:   'admin'
+      status:   'admin',
+      active:   true
     }).exec(function (err, user) {
 
       if( err ) {
