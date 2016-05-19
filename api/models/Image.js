@@ -59,6 +59,20 @@ module.exports = {
 
     }
 
+  },
+
+  beforeUpdate: function (values, next) {
+
+    // Prevent user from overriding these attributes
+    delete values.thumb;
+    delete values.medium;
+    delete values.large;
+    delete values.original;
+    delete values.createdAt;
+    delete values.updatedAt;
+
+    next();
+
   }
 
 };

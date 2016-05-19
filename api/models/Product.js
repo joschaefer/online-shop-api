@@ -41,13 +41,8 @@ module.exports = {
   beforeUpdate: function (values, next) {
 
     // Prevent user from overriding these attributes
-    delete values.image;
     delete values.createdAt;
     delete values.updatedAt;
-
-    if (values.category.id) {
-      values.category = values.category.id;
-    }
 
     next();
 
