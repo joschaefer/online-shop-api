@@ -63,10 +63,19 @@ module.exports = {
 
   beforeUpdate: function (values, next) {
 
+    if (obj.thumb && obj.thumb.indexOf('http') === 0) {
+      delete obj.thumb;
+    }
+
+    if (obj.medium && obj.medium.indexOf('http') === 0) {
+      delete obj.medium;
+    }
+
+    if (obj.large && obj.large.indexOf('http') === 0) {
+      delete obj.large;
+    }
+
     // Prevent user from overriding these attributes
-    delete values.thumb;
-    delete values.medium;
-    delete values.large;
     delete values.original;
     delete values.createdAt;
     delete values.updatedAt;
