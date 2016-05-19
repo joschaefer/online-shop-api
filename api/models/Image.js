@@ -41,9 +41,18 @@ module.exports = {
       var obj = this.toObject()
         , baseUrl = sails.config.app.baseUrl;
 
-      obj.thumb    = baseUrl + obj.thumb;
-      obj.medium   = baseUrl + obj.medium;
-      obj.large    = baseUrl + obj.large;
+      if (obj.thumb) {
+        obj.thumb = baseUrl + obj.thumb;
+      }
+
+      if (obj.medium) {
+        obj.medium = baseUrl + obj.medium;
+      }
+
+      if (obj.large) {
+        obj.large = baseUrl + obj.large;
+      }
+
       obj.original = baseUrl + obj.original;
 
       return obj;
