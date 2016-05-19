@@ -34,7 +34,7 @@ module.exports.connections = {
   *                                                                          *
   * PostgreSQL storage for deployment on Heroku                              *
   *                                                                          *
-  * Run: heroku addons:create heroku-postgresql:DYNO_NAME                    *
+  * Run: heroku addons:create heroku-postgresql:hobby-dev                    *
   *                                                                          *
   ***************************************************************************/
   herokuPostgreSQL: {
