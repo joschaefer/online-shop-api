@@ -18,7 +18,7 @@ module.exports = {
    ***************************************************************************/
 
   models: {
-    connection: 'herokuPostgreSQL',
+    connection: 'localDiskDb',
     migrate: 'alter'
   }
 
