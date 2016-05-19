@@ -36,6 +36,17 @@ module.exports = {
       defaultsTo: false
     }
 
+  },
+
+  beforeUpdate: function (values, next) {
+
+    // Prevent user from overriding these attributes
+    delete values.image;
+    delete values.createdAt;
+    delete values.updatedAt;
+
+    next();
+
   }
 
 };
