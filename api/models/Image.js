@@ -30,10 +30,10 @@ module.exports = {
 
       var obj = this.toObject();
 
-      obj.thumb    = cloudinary.url(obj.thumb,  { width: 600,  height: 450, crop: 'thumb', gravity: 'center' });
-      obj.medium   = cloudinary.url(obj.medium, { width: 800,  height: 600  });
-      obj.large    = cloudinary.url(obj.large,  { width: 1600, height: 1200 });
-      obj.original = cloudinary.url(obj.original);
+      obj.thumb    = cloudinary.url(obj.filename, { width: 600,  height: 450, crop: 'thumb', gravity: 'center' });
+      obj.medium   = cloudinary.url(obj.filename, { width: 800,  height: 600  });
+      obj.large    = cloudinary.url(obj.filename, { width: 1600, height: 1200 });
+      obj.original = cloudinary.url(obj.filename);
 
       delete obj.filename;
 
