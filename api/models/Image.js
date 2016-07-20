@@ -5,6 +5,8 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
+var cloudinary = require('cloudinary');
+
 module.exports = {
 
   attributes: {
@@ -19,41 +21,21 @@ module.exports = {
       min: 0
     },
 
-    thumb: {
-      type: 'string'
-    },
-
-    medium: {
-      type: 'string'
-    },
-
-    large: {
-      type: 'string'
-    },
-
-    original: {
+    filename: {
       type: 'string',
       required: true
     },
 
     toJSON: function() {
 
-      var obj = this.toObject()
-        , baseUrl = sails.config.app.baseUrl;
+      var obj = this.toObject();
 
-      if (obj.thumb) {
-        obj.thumb = baseUrl + obj.thumb;
-      }
+      obj.thumb    = cloudinary.url(obj.thumb,  { width: 600,  height: 450, crop: 'thumb', gravity: 'center' });
+      obj.medium   = cloudinary.url(obj.medium, { width: 800,  height: 600  });
+      obj.large    = cloudinary.url(obj.large,  { width: 1600, height: 1200 });
+      obj.original = cloudinary.url(obj.original);
 
-      if (obj.medium) {
-        obj.medium = baseUrl + obj.medium;
-      }
-
-      if (obj.large) {
-        obj.large = baseUrl + obj.large;
-      }
-
-      obj.original = baseUrl + obj.original;
+      delete obj.filename;
 
       return obj;
 

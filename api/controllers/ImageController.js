@@ -5,41 +5,14 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-var gm = require('gm');
-var im = gm.subClass({ imageMagick: true });
-var uuid = require('uuid');
+var cloudinary = require('cloudinary');
 
 module.exports = {
 
   create: function (req, res) {
 
     req.file('image').upload({
-      maxBytes: 10000000,
-      dirname: '../../uploads',
-      saveAs: function (file, cb) {
-
-        var ending;
-
-        switch (file.headers['content-type']) {
-
-          case 'image/jpeg':
-            ending = 'jpg';
-            break;
-          case 'image/png':
-            ending = 'png';
-            break;
-          case 'image/gif':
-            ending = 'gif';
-            break;
-          default:
-            ending = 'jpg';
-
-        }
-
-        var filename = uuid.v4() + '.' + ending;
-        cb(null, filename);
-
-      }
+      maxBytes: 10000000
     }, function whenDone(err, uploads) {
 
       if (err) {
@@ -54,66 +27,19 @@ module.exports = {
       // Only consider one file per POST request
       var upload = uploads[0];
 
-      var file = _.object(['name', 'ending', 'path'], splitFilePath(upload.fd))
-        , filenameThumb    = buildFilename(file, 'thumb')
-        , filenameMedium   = buildFilename(file, 'medium')
-        , filenameLarge    = buildFilename(file, 'large')
-        , filenameOriginal = buildFilename(file);
+      // Upload image via Cloudinary
+      cloudinary.uploader.upload(upload, function(result) {
 
-      Image.create({
-        original: buildFileAddress(file)
-      }).exec(function (err, image) {
+        sails.log.info(result);
 
-        if (err) return res.serverError(err);
-
-        // Generate thumbnail
-        im(filenameOriginal).resize(600, 450, '^').gravity('center').crop(600, 450).write(filenameThumb, function (err) {
-
+        Image.create({
+          filename: result.public_id,
+          height:   result.height,
+          width:    result.width
+        }).exec(function (err, image) {
           if (err) return res.serverError(err);
-
-          Image.update(image.id, {
-            thumb: buildFileAddress(file, 'thumb')
-          }).exec(function (err) {
-            if (err) return res.serverError(err);
-          });
-
+          return res.created(image);
         });
-
-        // Generate medium version
-        im(filenameOriginal).resize(800, 600).write(filenameMedium, function (err) {
-
-          if (err) return res.serverError(err);
-
-          im(filenameMedium).size(function (err, size) {
-
-            if (err) return res.serverError(err);
-
-            Image.update(image.id, {
-              width: size.width,
-              height: size.height,
-              medium: buildFileAddress(file, 'medium')
-            }).exec(function (err) {
-              if (err) return res.serverError(err);
-            });
-
-          });
-
-        });
-
-        // Generate large version
-        im(filenameOriginal).resize(1600, 1200).write(filenameLarge, function (err) {
-
-          if (err) return res.serverError(err);
-
-          Image.update(image.id, {
-            large: buildFileAddress(file, 'large')
-          }).exec(function (err) {
-            if (err) return res.serverError(err);
-          });
-
-        });
-
-        return res.created(image);
 
       });
 
@@ -122,43 +48,3 @@ module.exports = {
   }
 
 };
-
-function buildFileAddress(file, insertion) {
-
-  var address = '/uploads/' + file.name;
-
-  if (insertion) {
-    address += '-' + insertion;
-  }
-
-  address += '.' + file.ending;
-  return address;
-
-}
-
-function buildFilename(file, insertion) {
-
-  var filename = file.path + '/' + file.name;
-
-  if (insertion) {
-    filename += '-' + insertion;
-  }
-
-  filename += '.' + file.ending;
-  return filename;
-
-}
-
-function splitFilePath(fullFilename) {
-  var path = splitLast(fullFilename, '/');
-  var result = splitLast(path[1], '.');
-  result.push(path[0]);
-  return result;
-}
-
-function splitLast(string, separator) {
-  var parts = string.split(separator);
-  var last = parts.pop();
-  var first = parts.join(separator);
-  return [first, last];
-}
