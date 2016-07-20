@@ -28,7 +28,7 @@ module.exports = {
       var upload = uploads[0];
 
       // Upload image via Cloudinary
-      cloudinary.uploader.upload(upload, function(result) {
+      cloudinary.uploader.upload(upload.fd, function(result) {
 
         sails.log.info(result);
 
